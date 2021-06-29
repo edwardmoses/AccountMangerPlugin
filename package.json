@@ -1,0 +1,57 @@
+{
+  "_from": "git+https://github.com/kunder-lab/cordova-plugin-kunder-accountmanager.git",
+  "_id": "cordova-plugin-kunder-accountmanager@1.0.2",
+  "_inBundle": false,
+  "_integrity": "",
+  "_location": "/cordova-plugin-kunder-accountmanager",
+  "_phantomChildren": {},
+  "_requested": {
+    "type": "git",
+    "raw": "https://github.com/kunder-lab/cordova-plugin-kunder-accountmanager.git",
+    "rawSpec": "https://github.com/kunder-lab/cordova-plugin-kunder-accountmanager.git",
+    "saveSpec": "git+https://github.com/kunder-lab/cordova-plugin-kunder-accountmanager.git",
+    "fetchSpec": "https://github.com/kunder-lab/cordova-plugin-kunder-accountmanager.git",
+    "gitCommittish": null
+  },
+  "_requiredBy": [
+    "#USER",
+    "/"
+  ],
+  "_resolved": "git+https://github.com/kunder-lab/cordova-plugin-kunder-accountmanager.git#2f28bb4efa2c4023621e75d83445b0da157e3714",
+  "_spec": "https://github.com/kunder-lab/cordova-plugin-kunder-accountmanager.git",
+  "_where": "/Users/bionuser/bitbucketRepo/Other Files/HCP SPACE INTEGRATION/ionic-sqllite-custom-content-provider",
+  "author": {
+    "name": "Kunder"
+  },
+  "bugs": {
+    "url": "https://github.com/kunder-lab/cordova-plugin-kunder-accountmanager/issues"
+  },
+  "bundleDependencies": false,
+  "cordova": {
+    "id": "cordova-plugin-kunder-accountmanager",
+    "platforms": [
+      "android",
+      "ios"
+    ]
+  },
+  "deprecated": false,
+  "description": "Use Android Account Manager and iOS Keychain to manage accounts of one user and share with other applications of the same vendor",
+  "devDependencies": {},
+  "homepage": "https://github.com/kunder-lab/cordova-plugin-kunder-accountmanager#readme",
+  "keywords": [
+    "cordova",
+    "accountmanager",
+    "android",
+    "ios",
+    "plugin",
+    "ecosystem:cordova",
+    "cordova-android"
+  ],
+  "license": "MIT",
+  "name": "cordova-plugin-kunder-accountmanager",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/kunder-lab/cordova-plugin-kunder-accountmanager.git"
+  },
+  "version": "1.0.2"
+}
