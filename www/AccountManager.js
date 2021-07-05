@@ -38,8 +38,18 @@ module.exports = (function() {
     cordova.exec(successCallback, errorCallback, 'AccountManagerPlugin', 'changePassword', [accountType, group, "0000"]);
   };
 
+  var _setInternetCredentials = function(user, password, server, group, options, successCallback, errorCallback) {
+    cordova.exec(successCallback, errorCallback, 'AccountManagerPlugin', 'setInternetCredentials', [user, password, server, group, options]);
+  };
 
+  var _getInternetCredentials = function(server, group, successCallback, errorCallback) {
+    cordova.exec(successCallback, errorCallback, 'AccountManagerPlugin', 'getInternetCredentials', [server, group]);
+  };
 
+  var _deleteInternetCredentials = function(server, group, successCallback, errorCallback) {
+    cordova.exec(successCallback, errorCallback, 'AccountManagerPlugin', 'deleteInternetCredentials', [server, group]);
+  };
+  
   return {
     initWithKey: _initWithKey,
     registerAccount: _addAccount,
@@ -50,6 +60,9 @@ module.exports = (function() {
     setUserData: _setUserData,
     setPassword: _changePassword,
     resetPassword: _changePasswordToCero,
+    setInternetCredentials: _setInternetCredentials,
+    getInternetCredentials: _getInternetCredentials,
+    deleteInternetCredentials: _deleteInternetCredentials,
   };
 
 })();

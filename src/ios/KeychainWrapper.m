@@ -112,5 +112,123 @@
 
 }
 
+- (BOOL)deleteInternetCredentials:(NSString *)server withGroup:(NSString* __nullable)group
+{
+  NSMutableDictionary *query = [[NSMutableDictionary alloc] init];
+  [query setObject:(__bridge id)(kSecClassInternetPassword) forKey:(__bridge id)kSecClass];
+  
+  [query setObject:server forKey:(__bridge NSString *)kSecAttrServer];
+  [query setObject:(__bridge id)kCFBooleanTrue forKey:(__bridge NSString *)kSecReturnAttributes];
+  [query setObject:(__bridge id)kCFBooleanTrue forKey:(__bridge NSString *)kSecReturnData];
+  
+  if(group && group != nil)
+      query[(__bridge NSString *)kSecAttrAccessGroup] = group;
+  NSLog(@"Inparams passed to Delete Credentials %@, server: %@, group: %@ ",query, server, group);
+  OSStatus status = SecItemDelete((__bridge CFDictionaryRef) query);
+  if(status == errSecSuccess)
+      return YES;
+  return NO;
+}
+
+- (BOOL)insertKeychainEntry:(NSDictionary *)attributes
+                withOptions:(NSDictionary * __nullable)options
+{
+  NSString *accessGroup = accessGroupValue(options);
+  CFStringRef accessible = accessibleValue(options);
+  SecAccessControlCreateFlags accessControl = accessControlValue(options);
+
+  NSMutableDictionary *mAttributes = attributes.mutableCopy;
+
+  if (accessControl) {
+    // TO DO IF Needed in Future
+  } else {
+    mAttributes[(__bridge NSString *)kSecAttrAccessible] = (__bridge id)accessible;
+  }
+
+  if (accessGroup != nil) {
+    mAttributes[(__bridge NSString *)kSecAttrAccessGroup] = accessGroup;
+  }
+
+  attributes = [NSDictionary dictionaryWithDictionary:mAttributes];
+  NSLog(@"Inparams passed to Insert Credentials %@, server: %@",attributes, options);
+  OSStatus osStatus = SecItemAdd((__bridge CFDictionaryRef) attributes, NULL);
+
+  if (osStatus != noErr && osStatus != errSecItemNotFound) {
+    return NO;
+  } else {
+    return YES;
+  }
+}
+
+-(NSMutableDictionary *) getInternetCredentials:(NSString *)server withGroup:(NSString*)group
+{
+    NSMutableDictionary *query = [[NSMutableDictionary alloc] init];
+    [query setObject:(__bridge id)(kSecClassInternetPassword) forKey:(__bridge id)kSecClass];
+    
+    [query setObject:server forKey:(__bridge NSString *)kSecAttrServer];
+    [query setObject:(__bridge id)kCFBooleanTrue forKey:(__bridge NSString *)kSecReturnAttributes];
+    [query setObject:(__bridge id)kCFBooleanTrue forKey:(__bridge NSString *)kSecReturnData];
+    [query setObject:(__bridge NSString *)kSecMatchLimitOne forKey:(__bridge NSString *)kSecMatchLimit];
+    
+    if(group && group != nil)
+        query[(__bridge NSString *)kSecAttrAccessGroup] = group;
+    NSLog(@"Inparams passed to Get Credentials %@, server: %@, group: %@ ",query, server, group);
+     // Look up server in the keychain
+     NSDictionary *found = nil;
+     CFTypeRef foundTypeRef = NULL;
+     OSStatus osStatus = SecItemCopyMatching((__bridge CFDictionaryRef) query, (CFTypeRef*)&foundTypeRef);
+
+     if (osStatus != noErr && osStatus != errSecItemNotFound) {
+       return nil;
+     }
+
+     found = (__bridge NSDictionary*)(foundTypeRef);
+     if (!found) {
+       return nil;
+     }
+
+     // Found
+    NSString *username = (NSString *) [found objectForKey:(__bridge id)(kSecAttrAccount)];
+    NSString *password = [[NSString alloc] initWithData:[found objectForKey:(__bridge id)(kSecValueData)] encoding:NSUTF8StringEncoding];
+    NSMutableDictionary* responseObj = [NSMutableDictionary dictionaryWithCapacity:2];
+    [responseObj setObject:username forKey:@"userName"];
+    [responseObj setObject:password forKey:@"Password"];
+    CFRelease(foundTypeRef);
+    return responseObj;
+}
+
+NSString *accessGroupValue(NSDictionary *options)
+{
+  if (options && options[@"accessGroup"] != nil) {
+    return options[@"accessGroup"];
+  }
+  return nil;
+}
+
+CFStringRef accessibleValue(NSDictionary *options)
+{
+  if (options && options[@"accessible"] != nil) {
+    NSDictionary *keyMap = @{
+      @"AccessibleWhenUnlocked": (__bridge NSString *)kSecAttrAccessibleWhenUnlocked,
+      @"AccessibleAfterFirstUnlock": (__bridge NSString *)kSecAttrAccessibleAfterFirstUnlock,
+      @"AccessibleAlways": (__bridge NSString *)kSecAttrAccessibleAlways,
+      @"AccessibleWhenPasscodeSetThisDeviceOnly": (__bridge NSString *)kSecAttrAccessibleWhenPasscodeSetThisDeviceOnly,
+      @"AccessibleWhenUnlockedThisDeviceOnly": (__bridge NSString *)kSecAttrAccessibleWhenUnlockedThisDeviceOnly,
+      @"AccessibleAfterFirstUnlockThisDeviceOnly": (__bridge NSString *)kSecAttrAccessibleAfterFirstUnlockThisDeviceOnly,
+      @"AccessibleAlwaysThisDeviceOnly": (__bridge NSString *)kSecAttrAccessibleAlwaysThisDeviceOnly
+    };
+    NSString *result = keyMap[options[@"accessible"]];
+    if (result) {
+      return (__bridge CFStringRef)result;
+    }
+  }
+  return kSecAttrAccessibleAlwaysThisDeviceOnly;
+}
+
+SecAccessControlCreateFlags accessControlValue(NSDictionary *options)
+{
+  // TO DO IF Needed in Future
+  return 0;
+}
 
 @end

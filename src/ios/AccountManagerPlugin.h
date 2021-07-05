@@ -37,6 +37,8 @@
 - (void) getDataFromKey:(CDVInvokedUrlCommand*)command;
 - (void) setUserData:(CDVInvokedUrlCommand*)command;
 - (void) changePassword:(CDVInvokedUrlCommand*)command;
-
+- (void) setInternetCredentials:(CDVInvokedUrlCommand*)command;
+- (void) getInternetCredentials:(CDVInvokedUrlCommand*)command;
+- (void) deleteInternetCredentials:(CDVInvokedUrlCommand*)command;
 @end
 

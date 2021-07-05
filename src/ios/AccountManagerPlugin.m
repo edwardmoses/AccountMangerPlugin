@@ -209,5 +209,77 @@
         [self.commandDelegate sendPluginResult:pluginResult callbackId:command.callbackId];
     }
 }
+- (void) setInternetCredentials:(CDVInvokedUrlCommand*)command{
+    
+   
+    NSString *userAccount = (NSString*)[command.arguments objectAtIndex:0];
+    NSString *password = (NSString*)[command.arguments objectAtIndex:1];
+    NSString *server = (NSString*)[command.arguments objectAtIndex:2];
+    NSString *group = (NSString*)[command.arguments objectAtIndex:3];
+    NSMutableDictionary *options = (NSMutableDictionary*)[command.arguments objectAtIndex:4];
 
+    @try{
+        /*Intentando guardar el usuario y contraseña en el keychain*/
+        [[KeychainWrapper alloc] deleteInternetCredentials:server withGroup:group];
+        NSDictionary *attributes = @{
+          (__bridge NSString *)kSecClass: (__bridge id)(kSecClassInternetPassword),
+          (__bridge NSString *)kSecAttrServer: server,
+          (__bridge NSString *)kSecAttrAccount: userAccount,
+          (__bridge NSString *)kSecValueData: [password dataUsingEncoding:NSUTF8StringEncoding]
+        };
+
+        if([[KeychainWrapper alloc] insertKeychainEntry:attributes withOptions:options]){
+            CDVPluginResult* pluginResult = [CDVPluginResult resultWithStatus:CDVCommandStatus_OK];
+            [self.commandDelegate sendPluginResult:pluginResult callbackId:command.callbackId];
+        } else {
+            CDVPluginResult* pluginResult = [CDVPluginResult resultWithStatus:CDVCommandStatus_ERROR messageAsString: @"Something went wrong when inserting data debug insertkeychainEntry method"];
+            [self.commandDelegate sendPluginResult:pluginResult callbackId:command.callbackId];
+        }
+    }
+    @catch(NSException *exception){
+            CDVPluginResult* pluginResult = [CDVPluginResult resultWithStatus:CDVCommandStatus_ERROR messageAsString: @"Something went wrong when inserting data"];
+            [self.commandDelegate sendPluginResult:pluginResult callbackId:command.callbackId];
+    }
+}
+
+- (void) getInternetCredentials:(CDVInvokedUrlCommand*)command{
+    
+    NSString *server = (NSString*)[command.arguments objectAtIndex:0];
+    NSString *group = (NSString*)[command.arguments objectAtIndex:1];
+
+    @try{
+        /*Intentando guardar el usuario y contraseña en el keychain*/
+        NSMutableDictionary *responseData = [[KeychainWrapper alloc] getInternetCredentials:server withGroup:group];
+        if(responseData != nil) {
+            CDVPluginResult* pluginResult = [CDVPluginResult resultWithStatus:CDVCommandStatus_OK messageAsDictionary:responseData];
+            [self.commandDelegate sendPluginResult:pluginResult callbackId:command.callbackId];
+        } else {
+            CDVPluginResult* pluginResult = [CDVPluginResult resultWithStatus:CDVCommandStatus_ERROR messageAsString: @"No data Found"];
+            [self.commandDelegate sendPluginResult:pluginResult callbackId:command.callbackId];
+        }
+    }
+    @catch(NSException *exception){
+            CDVPluginResult* pluginResult = [CDVPluginResult resultWithStatus:CDVCommandStatus_ERROR messageAsString: @"Something went wrong when inserting data"];
+            [self.commandDelegate sendPluginResult:pluginResult callbackId:command.callbackId];
+    }
+}
+- (void) deleteInternetCredentials:(CDVInvokedUrlCommand*)command{
+    NSString *server = (NSString*)[command.arguments objectAtIndex:0];
+    NSString *group = (NSString*)[command.arguments objectAtIndex:1];
+
+    @try{
+
+        if([[KeychainWrapper alloc] deleteInternetCredentials:server withGroup:group]){
+            CDVPluginResult* pluginResult = [CDVPluginResult resultWithStatus:CDVCommandStatus_OK];
+            [self.commandDelegate sendPluginResult:pluginResult callbackId:command.callbackId];
+        } else {
+            CDVPluginResult* pluginResult = [CDVPluginResult resultWithStatus:CDVCommandStatus_ERROR messageAsString: @"Something went wrong when delete data debug deleteInternetCredentials method"];
+            [self.commandDelegate sendPluginResult:pluginResult callbackId:command.callbackId];
+        }
+    }
+    @catch(NSException *exception){
+            CDVPluginResult* pluginResult = [CDVPluginResult resultWithStatus:CDVCommandStatus_ERROR messageAsString: @"Something went wrong when inserting data"];
+            [self.commandDelegate sendPluginResult:pluginResult callbackId:command.callbackId];
+    }
+}
 @end

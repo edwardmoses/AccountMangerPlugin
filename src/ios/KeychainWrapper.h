@@ -21,5 +21,7 @@
 -(BOOL) removeData;
 -(NSData *) getData;
 -(BOOL) removeAllData;
-
+-(BOOL) deleteInternetCredentials: (NSString *)server withGroup:(NSString*)group;
+-(BOOL) insertKeychainEntry: (NSDictionary *)attributes withOptions:(NSDictionary *)options;
+-(NSMutableDictionary *) getInternetCredentials: (NSString *)server withGroup:(NSString*)group;
 @end
