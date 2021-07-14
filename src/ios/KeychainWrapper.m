@@ -123,7 +123,6 @@
   
   if(group && group != nil)
       query[(__bridge NSString *)kSecAttrAccessGroup] = group;
-  NSLog(@"Inparams passed to Delete Credentials %@, server: %@, group: %@ ",query, server, group);
   OSStatus status = SecItemDelete((__bridge CFDictionaryRef) query);
   if(status == errSecSuccess)
       return YES;
@@ -150,7 +149,6 @@
   }
 
   attributes = [NSDictionary dictionaryWithDictionary:mAttributes];
-  NSLog(@"Inparams passed to Insert Credentials %@, server: %@",attributes, options);
   OSStatus osStatus = SecItemAdd((__bridge CFDictionaryRef) attributes, NULL);
 
   if (osStatus != noErr && osStatus != errSecItemNotFound) {
@@ -172,7 +170,6 @@
     
     if(group && group != nil)
         query[(__bridge NSString *)kSecAttrAccessGroup] = group;
-    NSLog(@"Inparams passed to Get Credentials %@, server: %@, group: %@ ",query, server, group);
      // Look up server in the keychain
      NSDictionary *found = nil;
      CFTypeRef foundTypeRef = NULL;

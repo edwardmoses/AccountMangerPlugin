@@ -36,13 +36,11 @@ public class AccountManagerPlugin extends CordovaPlugin {
     public boolean execute(String action, JSONArray args, final CallbackContext callbackContext) throws JSONException {
 
         AccountManager accountManager = AccountManager.get(cordova.getActivity().getApplicationContext());
-        Log.i("ACCOUNTMANGER_BION","logginggg Entered execute------------------------------->"+action+args);
         /* if(!action.equals("initWithKey") && ENCRYPTION_KEY == null){
             callbackContext.sendPluginResult(new PluginResult(PluginResult.Status.ERROR));
         } */
         if (action.equals("initWithKey")) {
             String encryptionKey = args.getString(0);
-            Log.i("ACCOUNTMANGER_BION","logginggg------------------------------->"+encryptionKey);
             ENCRYPTION_KEY = encryptionKey;
             JSONObject r = new JSONObject();
             r.put("responseCode", "ok");
@@ -58,7 +56,6 @@ public class AccountManagerPlugin extends CordovaPlugin {
             String accountType = args.getString(2);
             Bundle userData = new Bundle();
 
-            Log.i("ACCOUNTMANGER_BION","logginggg Entered add account------------------------------->"+accountType+userAccount+password);
             try {
                 JSONObject jsonObject = args.getJSONObject(4);
                 Iterator<?> iterator = jsonObject.keys();
@@ -82,7 +79,6 @@ public class AccountManagerPlugin extends CordovaPlugin {
 
 
             Account [] accounts = accountManager.getAccountsByType(accountType);
-            Log.i("ACCOUNTMANGER_BION","logginggg add account Details------------------------------->"+accounts);
             if(accounts.length == 0){
                 //No hay cuentas, entonces es posible añadir una
 
@@ -220,7 +216,6 @@ public class AccountManagerPlugin extends CordovaPlugin {
             String accountType = args.getString(0);
             String keyData = args.getString(2);
             Account [] accounts = accountManager.getAccountsByType(accountType);
-            Log.i("ACCOUNTMANGER_BION","logginggg GET DATA FROM KEY ------------------------------->"+accountType+keyData);
             if(accounts.length == 0){
                 //No se pueden obtener los datos de la cuenta
                 callbackContext.sendPluginResult(new PluginResult(PluginResult.Status.INVALID_ACTION));
@@ -237,7 +232,6 @@ public class AccountManagerPlugin extends CordovaPlugin {
                 }
 
                 String data = accountManager.getUserData(accounts[0], encryptedKey);
-                Log.i("ACCOUNTMANGER_BION","logginggg GET DATA FROM KEY DATA ------------------------------->"+accountType+data);
                 if(data != null){
                   if(ENCRYPTION_KEY != null) {
                     try{
