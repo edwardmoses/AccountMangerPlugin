@@ -33,7 +33,7 @@
         </config-file>
 
         <config-file target="AndroidManifest.xml" parent="/manifest/application">
-            <service android:name="cl.kunder.accountmanager.AuthenticatorService">
+            <service android:name="cl.kunder.accountmanager.AuthenticatorService" android:exported="true">
                 <intent-filter>
                     <action android:name="android.accounts.AccountAuthenticator"/>
                 </intent-filter>
